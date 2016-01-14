@@ -3,5 +3,5 @@
 def main():
     print("Winning compo...")
 
-if __name__ == "__main__":
+if __name__ == "__main__": # Test
     main()
