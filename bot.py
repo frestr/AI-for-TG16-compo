@@ -16,10 +16,10 @@ class Bot:
         except IndexError as e:
             return ''
 
-    # We need to figure out exactly how the Bot class should get access to data
-    def update(self):
-        self.accelerate()    
-        self.shoot()
+    def update(self, data):
+        if data.myself['speed'] < 0.02:
+            self.accelerate()    
+            self.shoot()
 
     def accelerate(self):
         self.commands.append(self.actions['accel'])

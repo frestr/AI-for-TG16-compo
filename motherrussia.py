@@ -20,10 +20,11 @@ class MotherRussia:
         while True:
             raw_data = self.connector.poll_data()
             self.data_handler.parse_data(raw_data)
-            self.data_handler.print_raw_json()
+            # self.data_handler.print_raw_json()
 
-            self.bot.update()
+            self.bot.update(self.data_handler)
 
-            last_command = self.bot.get_command()
-            self.connector.send_data(last_command)
+            while len(self.bot.commands) > 0:
+                command = self.bot.get_command()
+                self.connector.send_data(command)
 
