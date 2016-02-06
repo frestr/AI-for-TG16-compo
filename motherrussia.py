@@ -29,3 +29,5 @@ class MotherRussia:
                 command = self.bot.get_command()
                 self.connector.send_data(command)
 
+        self.connector.close()            
+

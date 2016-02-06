@@ -27,6 +27,9 @@ class SocketHandler:
         print('\nCould not create socket: ', error_msg)
         sys.exit(1)
 
+    def close(self):
+        self.sock.close()
+
     def poll_data(self, timeout = None):
         try:
             self.sock.settimeout(timeout)
@@ -43,3 +46,4 @@ class SocketHandler:
         if string[-1:] != '\n':
             string += '\n'
         self.sock.send(string.encode('ascii'))
+
