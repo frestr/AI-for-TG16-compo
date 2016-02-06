@@ -25,14 +25,17 @@ class SocketHandler:
         print('Could not create socket: ', error_msg)
         sys.exit(1)
                 
-    def poll_data(self, timeout = self.TIMEOUT):
+    def poll_data(self, timeout = None):
         try:
             self.sock.settimeout(timeout)
             data_block = self.sock.recv(2**14)
             return data_block.decode()
 
-        except socket.timeout:
-            print('Timed out polling data.')
+        except Exception as e:
+            if e == socket.timeout():
+                print('Timed out polling data.')
+            else:
+                print('Could not poll for data: ', e)
 
     def send_data(self, string):
         self.sock.send(string.encode('ascii'))
