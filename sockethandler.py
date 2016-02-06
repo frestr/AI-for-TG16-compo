@@ -40,4 +40,6 @@ class SocketHandler:
                 print('Could not poll for data: ', msg)
                 
     def send_data(self, string):
+        if string[-1:] != '\n':
+            string += '\n'
         self.sock.send(string.encode('ascii'))

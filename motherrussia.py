@@ -14,7 +14,7 @@ class MotherRussia:
 
         self.connector = SocketHandler()
         self.connector.connect()
-        self.connector.send_data('NAME Putin\n')
+        self.connector.send_data('NAME Putin')
 
     def run(self):
         while True:
