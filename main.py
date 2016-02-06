@@ -2,9 +2,12 @@
 import socket
 import json
 import sys
+import time
 
 class Connector:
     def __init__(self):
+        self.TIMEOUT = 5.0
+        self.PORT = 54321
         pass
 
     def connect(self, host = ''):
@@ -12,12 +15,15 @@ class Connector:
         if host == '':
             host = socket.gethostname()
 
-        port = 54321
-        try:
-            self.sock.connect((host, port))
-        except OSError as msg:
-            print('Could not open socket: ', msg)
-            sys.exit(1)
+        t_start = time.time()
+        error_msg = ''
+        while time.time() - t_start <= self.TIMEOUT:
+            try:
+                self.sock.connect((host, self.PORT))
+            except OSError as msg:
+                error_msg = msg
+        print('Could not open socket: ', error_msg)
+        sys.exit(1)
         
     def poll_data(self, timeout = None):
         try:
