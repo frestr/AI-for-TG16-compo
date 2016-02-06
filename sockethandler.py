@@ -20,21 +20,24 @@ class SocketHandler:
                 self.sock.connect((host, self.PORT))
                 return 1
             except OSError as msg:
+                s = '\r{:<5.2f}'.format(self.TIMEOUT
+                                        - time.time() + t_start)
+                sys.stdout.write(s)
                 error_msg = msg
-        print('Could not create socket: ', error_msg)
+        print('\nCould not create socket: ', error_msg)
         sys.exit(1)
-                
+
     def poll_data(self, timeout = None):
         try:
             self.sock.settimeout(timeout)
             data_block = self.sock.recv(2**14)
             return data_block.decode()
 
-        except Exception as e:
-            if e == socket.timeout():
+        except Exception as msg:
+            if msg == socket.timeout():
                 print('Timed out polling data.')
             else:
-                print('Could not poll for data: ', e)
-
+                print('Could not poll for data: ', msg)
+                
     def send_data(self, string):
         self.sock.send(string.encode('ascii'))
