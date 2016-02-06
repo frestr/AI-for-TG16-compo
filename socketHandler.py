@@ -19,6 +19,7 @@ class socketHandler:
             while time.time() - t_start <= self.TIMEOUT:
                 try:
                     self.sock.connect((host, self.PORT))
+                    return 1
                 except OSError as msg:
                     error_msg = msg
             print('Could not create socket: ', error_msg)

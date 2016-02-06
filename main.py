@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from socketHandler import socketHandler
+import json
 
 def main():
     connector = socketHandler()
