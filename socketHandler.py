@@ -3,7 +3,7 @@ import json
 import sys
 import time
 
-class socketHandler:
+class SocketHandler:
     def __init__(self):
         self.TIMEOUT = 5.0
         self.PORT = 54321

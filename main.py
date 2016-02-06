@@ -3,7 +3,7 @@ from socketHandler import socketHandler
 import json
 
 def main():
-    connector = socketHandler()
+    connector = SocketHandler()
     connector.connect()
     connector.send_data('NAME bob\n')
 
