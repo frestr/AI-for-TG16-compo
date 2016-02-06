@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import socket
 import json
+import sys
 
 class Connector:
     def __init__(self):
@@ -12,7 +13,11 @@ class Connector:
             host = socket.gethostname()
 
         port = 54321
-        self.sock.connect((host, port))
+        try:
+            self.sock.connect((host, port))
+        except OSError as msg:
+            print('Could not open socket: ', msg)
+            sys.exit(1)
         
     def poll_data(self, timeout = None):
         try:
