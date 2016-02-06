@@ -28,7 +28,6 @@ class DataHandler:
         self.opponents = data['others'] if 'others' in data else []
 
         self.myself = data['you']
-        self.myself['speed'] = sqrt(self.myself['velocityX']**2 + self.myself['velocityY']**2)
 
     def print_raw_json(self):
         print(self.data)

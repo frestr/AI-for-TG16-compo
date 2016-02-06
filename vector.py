@@ -1,3 +1,5 @@
+from math import sqrt
+
 class vec:
     def __init__(self, x, y):
         self.x = x
@@ -20,7 +22,7 @@ class vec:
         return vec(x, y)
 
     def length(self):
-        return np.sqrt(self.x**2 + self.y**2)
+        return sqrt(self.x**2 + self.y**2)
 
     def normalize(self):
         length = self.length()

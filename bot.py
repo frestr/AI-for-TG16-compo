@@ -1,4 +1,5 @@
 from collections import deque
+from vector import vec
 
 class Bot:
     '''Bot is the artificial intelligence itself'''
@@ -16,8 +17,11 @@ class Bot:
         except IndexError as e:
             return ''
 
-    def update(self, data):
-        if data.myself['speed'] < 0.02:
+    def update_state(self, data):
+        self.velocity = vec(data.myself['velocityX'], data.myself['velocityY'])
+
+    def make_decisions(self):
+        if self.velocity.length() < 0.02:
             self.accelerate()    
             self.shoot()
 
