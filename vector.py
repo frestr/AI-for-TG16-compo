@@ -14,7 +14,7 @@ class vec:
         return vec(x, y)
 
     def __mul__(self, other):
-        """ Assume int/float  """
+        """ Assume int/float. In other word, NOT dot product  """
         x = self.x * other
         y = self.y * other
         return vec(x, y)
@@ -26,5 +26,8 @@ class vec:
         length = self.length()
         if length == 0:
             length = 1
-            self.x /= length
-            self.y /= length
+        self.x /= length
+        self.y /= length
+
+    def dot(self, other):
+        return self.x*other.x + self.y+other.y
