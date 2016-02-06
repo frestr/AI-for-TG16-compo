@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from socketHandler import SocketHandler
+from SocketHandler import SocketHandler
 import json
 
 def main():
