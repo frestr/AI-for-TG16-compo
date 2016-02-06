@@ -1,15 +1,10 @@
 #!/usr/bin/env python3
-from sockethandler import SocketHandler
-import json
+from motherrussia import MotherRussia
 
 def main():
-    connector = SocketHandler()
-    connector.connect()
-    connector.send_data('NAME bob\n')
-
-    while True:
-        data = json.loads(connector.poll_data())
-        print(data)
+    mother = MotherRussia()
+    mother.init()
+    mother.run()
 
 if __name__ == "__main__": 
     main()
