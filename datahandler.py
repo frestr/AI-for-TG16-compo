@@ -9,7 +9,6 @@ class DataHandler:
         try:
             self.data = json.loads(raw_data)
         except ValueError as e:
-            print('Error parsing json data:', e)
             return e
 
         message_type = self.data['messagetype']

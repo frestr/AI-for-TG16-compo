@@ -6,13 +6,25 @@ class MotherRussia:
     '''Mother russia functions as the program object'''
 
     def __init__(self):
-        pass
+        self.data_handler = DataHandler()
+        self.connector = SocketHandler()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exec_type, value, traceback):
+        if isinstance(value, KeyboardInterrupt):
+            print('Recieved keyboard interrupt')
+        elif isinstance(value, SystemExit):
+            print('Recieved system exit signal')
+        else:
+            print('Exception: ', value)
+        print('Attempting to clean up')
+        self.clean()
+        return True  # Prevents further error messages
 
     def init(self):
         self.bot = Bot()
-        self.data_handler = DataHandler()
-
-        self.connector = SocketHandler()
         self.connector.connect()
         self.connector.send_data('NAME Putin')
 
@@ -34,5 +46,6 @@ class MotherRussia:
         self.clean()
 
     def clean(self):
-        self.connector.close()
+        if self.connector.sock is not None:
+            self.connector.close()
 

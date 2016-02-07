@@ -6,10 +6,10 @@ class SocketHandler:
     def __init__(self):
         self.TIMEOUT = 10.0
         self.PORT = 54321
+        self.sock = socket.socket()
         pass
 
     def connect(self, host = ''):
-        self.sock = socket.socket()
         if host == '':
             host = socket.gethostname()
         self.sock.settimeout(self.TIMEOUT)
