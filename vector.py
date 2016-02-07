@@ -7,7 +7,7 @@ class vec:
 
     def __add__(self, other):
         x = self.x+other.x
-        y = self.y+other.y 
+        y = self.y+other.y
         return vec(x, y)
 
     def __sub__(self, other):
@@ -21,6 +21,9 @@ class vec:
         y = self.y * other
         return vec(x, y)
 
+    def __repr__(self):
+        return '[{0.x}, {0.y}]'.format(self)
+
     def length(self):
         return sqrt(self.x**2 + self.y**2)
 
@@ -32,4 +35,4 @@ class vec:
         self.y /= length
 
     def dot(self, other):
-        return self.x*other.x + self.y+other.y
+        return self.x*other.x + self.y*other.y
