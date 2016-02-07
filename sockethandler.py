@@ -9,7 +9,6 @@ class SocketHandler:
         self.TIMEOUT = timeout
         self.PORT = 54321
         self.sock = socket.socket()
-        pass
 
     def connect(self, host=''):
         if host == '':
