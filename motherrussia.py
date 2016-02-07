@@ -2,30 +2,41 @@ from sockethandler import SocketHandler
 from datahandler import DataHandler
 from bot import Bot
 
+
 class MotherRussia:
     '''Mother russia functions as the program object'''
 
-    def __init__(self):
+    def __init__(self, debug_mode=False, timeout=10.0):
         self.data_handler = DataHandler()
-        self.connector = SocketHandler()
+        self.connector = SocketHandler(timeout)
+        self.debug = debug_mode
 
     def __enter__(self):
         return self
 
     def __exit__(self, exec_type, value, traceback):
         if isinstance(value, KeyboardInterrupt):
-            print('Recieved keyboard interrupt')
+            print('\r\rRecieved keyboard interrupt')
         elif isinstance(value, SystemExit):
             print('Recieved system exit signal')
-        else:
+        elif isinstance(value, Exception):
             print('Exception: ', value)
-        print('Attempting to clean up')
-        self.clean()
-        return True  # Prevents further error messages
+
+        print('Attempting to clean up...')
+        clean_error = self.clean()
+        if isinstance(clean_error, Exception):
+            print('Could not clean up: ', clean_error)
+        else:
+            print('Done')
+
+        if not self.debug:
+            return True
 
     def init(self):
         self.bot = Bot()
-        self.connector.connect()
+        socket_error = self.connector.connect()
+        if isinstance(socket_error, Exception):
+            raise socket_error
         self.connector.send_data('NAME Putin')
 
     def run(self):
@@ -46,6 +57,8 @@ class MotherRussia:
         self.clean()
 
     def clean(self):
-        if self.connector.sock is not None:
-            self.connector.close()
-
+        try:
+            if self.connector.sock is not None:
+                self.connector.close()
+        except Exception as e:
+            return e

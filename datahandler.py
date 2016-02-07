@@ -1,5 +1,6 @@
 import json
 
+
 class DataHandler:
     def __init__(self):
         self.is_dead = False
@@ -20,7 +21,7 @@ class DataHandler:
 
         elif message_type == 'stateupdate':
             self.update_state_data(self.data['gamestate'])
-        
+
     def update_state_data(self, data):
         self.missiles = data['missiles'] if 'missiles' in data else []
         self.opponents = data['others'] if 'others' in data else []
@@ -29,4 +30,3 @@ class DataHandler:
 
     def print_raw_json(self):
         print(self.data)
-

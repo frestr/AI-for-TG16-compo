@@ -1,15 +1,17 @@
 import socket
-import sys
 import time
 
+
 class SocketHandler:
-    def __init__(self):
-        self.TIMEOUT = 10.0
+    def __init__(self, timeout=10.0):
+        if timeout is None:
+            timeout = 10.0
+        self.TIMEOUT = timeout
         self.PORT = 54321
         self.sock = socket.socket()
         pass
 
-    def connect(self, host = ''):
+    def connect(self, host=''):
         if host == '':
             host = socket.gethostname()
         self.sock.settimeout(self.TIMEOUT)
@@ -18,19 +20,16 @@ class SocketHandler:
         while time.time() - t_start <= self.TIMEOUT:
             try:
                 self.sock.connect((host, self.PORT))
-                return 1
+                return True
             except OSError as msg:
-                s = '\r{:<5.2f}'.format(self.TIMEOUT
-                                        - time.time() + t_start)
-                sys.stdout.write(s)
                 error_msg = msg
-        print('\nCould not create socket: ', error_msg)
-        sys.exit(1)
+
+        return error_msg
 
     def close(self):
         self.sock.close()
 
-    def poll_data(self, timeout = None):
+    def poll_data(self, timeout=None):
         try:
             self.sock.settimeout(timeout)
             data_block = self.sock.recv(2**16)
@@ -41,9 +40,8 @@ class SocketHandler:
                 print('Timed out polling data.')
             else:
                 print('Could not poll for data: ', msg)
-                
+
     def send_data(self, string):
         if string[-1:] != '\n':
             string += '\n'
         self.sock.send(string.encode('ascii'))
-
