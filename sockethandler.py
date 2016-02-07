@@ -33,7 +33,7 @@ class SocketHandler:
     def poll_data(self, timeout = None):
         try:
             self.sock.settimeout(timeout)
-            data_block = self.sock.recv(2**14)
+            data_block = self.sock.recv(2**16)
             return data_block.decode()
 
         except Exception as msg:
