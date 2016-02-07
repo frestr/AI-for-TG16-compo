@@ -1,6 +1,4 @@
-import sockethandler
 import json
-from math import sqrt
 
 class DataHandler:
     def __init__(self):
@@ -12,6 +10,7 @@ class DataHandler:
             self.data = json.loads(raw_data)
         except ValueError as e:
             print('Error parsing json data:', e)
+            return e
 
         message_type = self.data['messagetype']
         if message_type == 'dead':

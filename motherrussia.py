@@ -19,7 +19,9 @@ class MotherRussia:
     def run(self):
         while True:
             raw_data = self.connector.poll_data()
-            self.data_handler.parse_data(raw_data)
+            json_error = self.data_handler.parse_data(raw_data)
+            if isinstance(json_error, ValueError):
+                raise json_error
             # self.data_handler.print_raw_json()
 
             self.bot.update_state(self.data_handler)
@@ -29,5 +31,8 @@ class MotherRussia:
                 command = self.bot.get_command()
                 self.connector.send_data(command)
 
-        self.connector.close()            
+        self.clean()
+
+    def clean(self):
+        self.connector.close()
 
