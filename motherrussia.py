@@ -1,6 +1,7 @@
 from sockethandler import SocketHandler
 from datahandler import DataHandler
 from bot import Bot
+import time
 
 
 class MotherRussia:
@@ -10,6 +11,7 @@ class MotherRussia:
         self.data_handler = DataHandler()
         self.connector = SocketHandler(timeout)
         self.debug = debug_mode
+        self.bot = Bot()
 
     def __enter__(self):
         return self
@@ -33,7 +35,6 @@ class MotherRussia:
             return True
 
     def init(self):
-        self.bot = Bot()
         socket_error = self.connector.connect()
         if isinstance(socket_error, Exception):
             raise socket_error

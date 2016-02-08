@@ -1,4 +1,5 @@
 import json
+from entities import ship, missile
 
 
 class DataHandler:
@@ -23,10 +24,15 @@ class DataHandler:
             self.update_state_data(self.data['gamestate'])
 
     def update_state_data(self, data):
-        self.missiles = data['missiles'] if 'missiles' in data else []
-        self.opponents = data['others'] if 'others' in data else []
+        self.missiles = []
+        for _m in data['missiles']:
+            self.missiles.append(missile(_m))
 
-        self.myself = data['you']
+        self.opponents = []
+        for opponent in data['others']:
+            self.opponents.append(ship(opponent))
+
+        self.myself = ship(data['you'])
 
     def print_raw_json(self):
         print(self.data)

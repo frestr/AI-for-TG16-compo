@@ -1,5 +1,5 @@
 from collections import deque
-from vector import vec
+
 
 class Bot:
     '''Bot is the artificial intelligence itself'''
@@ -14,21 +14,19 @@ class Bot:
         try:
             command = self.commands.popleft()
             return command
-        except IndexError as e:
+        except IndexError:
             return ''
 
     def update_state(self, data):
-        self.velocity = vec(data.myself['velocityX'], data.myself['velocityY'])
+        self.ship = data.myself
 
     def make_decisions(self):
-        if self.velocity.length() < 0.02:
-            self.accelerate()    
+        if self.ship.speed() < 0.02:
+            self.accelerate()
             self.shoot()
 
     def accelerate(self):
         self.commands.append(self.actions['accel'])
 
-    def shoot(self, seeking = False):
+    def shoot(self, seeking=False):
         self.commands.append(self.actions['seeking' if seeking else 'missile'])
-
-    
