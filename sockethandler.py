@@ -42,8 +42,7 @@ class SocketHandler:
                     # Sending data may also trigger an exception if the pipe is broken
                     bytes_received = self.send_data('test')
                     if bytes_received == 0:
-                        print('Assuming connection closed')
-                        return ''
+                        raise BrokenPipeError
                     self.sock.settimeout(timeout)
 
             return data_block
@@ -54,8 +53,6 @@ class SocketHandler:
         except Exception as msg:
             if msg == socket.timeout():
                 print('Timed out polling data.')
-            elif 'Broken pipe' in str(msg):
-                print('Connection closed by server')
             else:
                 print('Could not poll for data: ', msg)
 
