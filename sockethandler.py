@@ -31,16 +31,38 @@ class SocketHandler:
     def poll_data(self, timeout=None):
         try:
             self.sock.settimeout(timeout)
-            data_block = self.sock.recv(2**16)
-            return data_block.decode()
+            while True:
+                data_block = self.sock.recv(2**16).decode()
+                # A newline at the end implies that the whole data block was received
+                if '\n' in data_block:
+                    break
+                # If no data was received, try to check if the connection was closed
+                if len(data_block) == 0:
+                    self.sock.settimeout(2)
+                    # Sending data may also trigger an exception if the pipe is broken
+                    bytes_received = self.send_data('test')
+                    if bytes_received == 0:
+                        print('Assuming connection closed')
+                        return ''
+                    self.sock.settimeout(timeout)
+
+            return data_block
+        
+        except BrokenPipeError:
+            print('Network socket closed (presumably by server). Quitting')
 
         except Exception as msg:
             if msg == socket.timeout():
                 print('Timed out polling data.')
+            elif 'Broken pipe' in str(msg):
+                print('Connection closed by server')
             else:
                 print('Could not poll for data: ', msg)
+
+        return ''
 
     def send_data(self, string):
         if string[-1:] != '\n':
             string += '\n'
-        self.sock.send(string.encode('ascii'))
+        # Returns the number of bytes sent
+        return self.sock.send(string.encode('ascii'))

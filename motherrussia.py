@@ -43,6 +43,8 @@ class MotherRussia:
     def run(self):
         while True:
             raw_data = self.connector.poll_data()
+            if len(raw_data) == 0:
+                break
             json_error = self.data_handler.parse_data(raw_data)
             if isinstance(json_error, ValueError):
                 # The exception will contain the string 'Extra data' if the raw data
