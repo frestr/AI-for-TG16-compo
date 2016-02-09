@@ -46,7 +46,7 @@ class SocketHandler:
                     self.sock.settimeout(timeout)
 
             return data_block
-        
+
         except BrokenPipeError:
             print('Network socket closed (presumably by server). Quitting')
 

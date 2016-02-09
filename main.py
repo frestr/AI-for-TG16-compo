@@ -13,6 +13,7 @@ def play_intro():
     '''
     print(string)
 
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--debug', action='store_true')

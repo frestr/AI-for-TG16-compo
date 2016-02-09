@@ -1,5 +1,4 @@
 from collections import deque
-from vector import vec
 import math
 
 
@@ -28,7 +27,7 @@ class Bot:
 
     def make_decisions(self):
         closest_opponent = self.get_closest_opponent()
-        if closest_opponent != None:
+        if closest_opponent is not None:
             if self.point_towards(closest_opponent.position) and self.ticks % 10 == 0:
                 self.shoot()
 
@@ -56,8 +55,8 @@ class Bot:
 
     # Returns True when pointing towards point
     def point_towards(self, point):
-        desired_angle =  math.atan2(point.y - self.ship.position.y, point.x - self.ship.position.x)
-        desired_angle *= (180.0 / math.pi) # Convert to degrees
+        desired_angle = math.atan2(point.y - self.ship.position.y, point.x - self.ship.position.x)
+        desired_angle *= (180.0 / math.pi)  # Convert to degrees
         ship_rotation = self.ship.rotation
         if 180 <= ship_rotation < 360:
             ship_rotation = ship_rotation - 360

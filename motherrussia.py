@@ -1,7 +1,6 @@
 from sockethandler import SocketHandler
 from datahandler import DataHandler
 from bot import Bot
-import time
 
 
 class MotherRussia:
