@@ -28,7 +28,8 @@ class Bot:
     def make_decisions(self):
         closest_opponent = self.get_closest_opponent()
         if closest_opponent is not None:
-            if self.point_towards(closest_opponent.position) and self.ticks % 10 == 0:
+            if (self.point_towards(closest_opponent.position) and
+                    self.ticks % 10 == 0):
                 self.shoot()
 
     def accelerate(self):
@@ -41,7 +42,8 @@ class Bot:
         if direction != 'r' and direction != 'l':
             print('Invalid rotation argument (must be either r or l)')
         else:
-            self.commands.append(self.actions['right' if direction == 'r' else 'left'])
+            direction = 'right' if direction == 'r' else 'left'
+            self.commands.append(self.actions[direction])
 
     def get_closest_opponent(self):
         shortest_dist = 999999
@@ -55,7 +57,8 @@ class Bot:
 
     # Returns True when pointing towards point
     def point_towards(self, point):
-        desired_angle = math.atan2(point.y - self.ship.position.y, point.x - self.ship.position.x)
+        desired_angle = math.atan2(point.y - self.ship.position.y,
+                                   point.x - self.ship.position.x)
         desired_angle *= (180.0 / math.pi)  # Convert to degrees
         ship_rotation = self.ship.rotation
         if 180 <= ship_rotation < 360:

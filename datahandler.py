@@ -1,5 +1,6 @@
 import json
-from entities import Ship, Missile
+from entities import Ship
+from entities import Missile
 
 
 class DataHandler:

@@ -46,13 +46,14 @@ class MotherRussia:
                 break
             json_error = self.data_handler.parse_data(raw_data)
             if isinstance(json_error, ValueError):
-                # The exception will contain the string 'Extra data' if the raw data
-                # it received was incomplete. Therefore, try to receive new raw data
+                # The exception will contain the string 'Extra data' if the
+                # raw data it received was incomplete. Therefore, try to
+                # receive new raw data
                 if 'Extra data' in str(json_error):
                     continue
                 else:
-                    # In most cases, this error will be 'Expecting value', because
-                    # the block of raw data it received was empty
+                    # In most cases, this error will be 'Expecting value',
+                    # because the block of raw data it received was empty
                     raise json_error
             # self.data_handler.print_raw_json()
 

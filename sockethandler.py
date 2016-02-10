@@ -33,13 +33,13 @@ class SocketHandler:
             self.sock.settimeout(timeout)
             while True:
                 data_block = self.sock.recv(2**16).decode()
-                # A newline at the end implies that the whole data block was received
+                # A newline at the end means the whole data block was received
                 if '\n' in data_block:
                     break
-                # If no data was received, try to check if the connection was closed
+                # If no data was received, check if the connection was closed
                 if len(data_block) == 0:
                     self.sock.settimeout(2)
-                    # Sending data may also trigger an exception if the pipe is broken
+                    # Sending data may throw an exception if the pipe is broken
                     bytes_received = self.send_data('test')
                     if bytes_received == 0:
                         raise BrokenPipeError
