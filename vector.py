@@ -1,4 +1,4 @@
-from math import sqrt
+from math import sqrt, atan2
 
 
 class vec:
@@ -34,6 +34,9 @@ class vec:
             length = 1
         self.x /= length
         self.y /= length
+
+    def atan2(self):
+        return atan2(self.y, self.x)
 
     def dot(self, other):
         return self.x*other.x + self.y*other.y

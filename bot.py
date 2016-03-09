@@ -1,5 +1,7 @@
 from collections import deque
 import math
+import copy
+import entities
 
 
 class Bot:
@@ -29,7 +31,8 @@ class Bot:
         closest_opponent = self.get_closest_opponent()
         if closest_opponent is not None:
             if (self.point_towards(closest_opponent.position) and
-                    self.ticks % 10 == 0):
+                self.ticks % 10 == 0):
+                # self.simulate()
                 self.shoot()
 
     def accelerate(self):
@@ -69,3 +72,18 @@ class Bot:
         elif angle_diff < -5:
             self.turn('l')
         return -5 < angle_diff < 5
+
+    def simulate(self):
+        target = copy.deepcopy(self.get_closest_opponent())
+
+        # Construct a missile
+        temp_data = {'x': self.ship.position.x, 'y': self.ship.position.y,
+                     'velocityX': self.ship.velocity.x,
+                     'velocityY': self.ship.velocity.y,
+                     'type': 'normal',
+                     'rotation': 0, 'energy': 1000, 'owner': 'me'}
+        missile = entities.Missile(temp_data)
+        
+        target_movement = target.getMovement(int(1000/50))
+        missile_movement = missile.getMovement(int(1000/50))
+        # Do something with the computed paths

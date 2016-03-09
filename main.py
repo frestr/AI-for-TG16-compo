@@ -2,6 +2,7 @@
 from motherrussia import MotherRussia
 import argparse
 
+
 def play_intro():
     string = '''
     Ladies and gentlemen, this is ... 
