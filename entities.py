@@ -35,7 +35,7 @@ class Ship(Entity):
         energy = self.energy
         is_dead = False
         for t in range(number_of_ticks):
-            if energy <= 0 or not is_dead:
+            if energy <= 0 or is_dead:
                 positions.append(vec(0, 0))
                 continue
 

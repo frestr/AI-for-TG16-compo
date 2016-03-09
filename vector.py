@@ -22,6 +22,12 @@ class vec:
         y = self.y * other
         return vec(x, y)
 
+    def __truediv__(self, other):
+        """ Assume  int/float. """
+        x = self.x / other
+        y = self.y / other
+        return vec(x, y)
+
     def __repr__(self):
         return '[{0.x}, {0.y}]'.format(self)
 
