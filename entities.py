@@ -32,33 +32,34 @@ class Ship(Entity):
         # Initial conditions
         pos = self.position
         vel = self.velocity
+        energy = self.energy
+        is_dead = False
         for t in range(number_of_ticks):
+            if energy <= 0 or not is_dead:
+                positions.append(vec(0, 0))
+                continue
+
             angle = self.position.atan2()
 
-            # Lose 1 energy per tick
-            force = pos.length()/(self.energy - t)
+            if pos.length() < 0.1:
+                is_dead = True
+                continue
+
+            force = pos.length() / energy
             vel.x -= cos(angle) * force
             vel.y -= sin(angle) * force
 
-            if vel.x > 0.05:
-                vel.x = 0.05
-            if vel.y > 0.05:
-                vel.y = 0.05
-            if vel.x < -0.05:
-                vel.x = -0.05
-            if vel.y < -0.05:
-                vel.y = -0.05
+            if vel.x > 0.05: vel.x = 0.05
+            if vel.y > 0.05: vel.y = 0.05
+            if vel.x < -0.05: vel.x = -0.05
+            if vel.y < -0.05: vel.y = -0.05
 
             pos += vel
 
-            if pos.x > 1.0:
-                pos.x = -1.0
-            elif pos.x < -1.0:
-                pos.x = 1.0
-            if pos.y > 1.0:
-                pos.y = -1.0
-            elif pos.y < -1.0:
-                pos.y = 1.0
+            if pos.x > 1.0: pos.x = -1.0
+            elif pos.x < -1.0: pos.x = 1.0
+            if pos.y > 1.0: pos.y = -1.0
+            elif pos.y < -1.0: pos.y = 1.0
 
             positions.append(pos)
 
@@ -78,33 +79,58 @@ class Missile(Entity):
         # Initial conditions
         pos = self.position
         vel = self.velocity
+        energy = self.energy
+        rotation = self.rotation
+        is_dead = False
         for t in range(number_of_ticks):
-            angle = self.position.atan2()
+            if is_dead:
+                positions.append(vec(0, 0))
+                continue
+            elif pos.length() < 0.1:
+                is_dead = True
 
             if vel.length() > MISSILE_MAX_SPEED:
                 velocityAngle = vel.atan2()
                 vel.x = cos(velocityAngle) * MISSILE_MAX_SPEED
                 vel.y = sin(velocityAngle) * MISSILE_MAX_SPEED
 
-            # Lose 50 energy per tick
-            force = pos.length()/(self.energy - 50*t)
+            # Force only depends on distance from the sun
+            force = pos.length() / 1000
+            angle = self.position.atan2()
             vel.x -= cos(angle) * force
             vel.y -= sin(angle) * force
 
             pos += vel
 
-            if pos.x > 1.0:
-                pos.x = -1.0
-            elif pos.x < -1.0:
-                pos.x = 1.0
-            if pos.y > 1.0:
-                pos.y = -1.0
-            elif pos.y < -1.0:
-                pos.y = 1.0
-
-            if (self.energy - t) < 10:
-                vel /= 1.01
+            if pos.x > 1.0: pos.x = -1.0
+            elif pos.x < -1.0: pos.x = 1.0
+            if pos.y > 1.0: pos.y = -1.0
+            elif pos.y < -1.0: pos.y = 1.0
 
             positions.append(pos)
+
+            # Always point in the right direction
+            if self.type == "NORMAL":
+                rotation = vel.atan2()
+
+            # Might be a bug. Logically, this should be before pos+=vel
+            if energy < 10:
+                vel /= 1.01
+                continue
+
+            if self.type == "MINE":
+                vel.x += cos(rotation) * 0.0005
+                vel.y += sin(rotation) * 0.0005
+                energy -= 1
+                continue
+
+            energy -= 50
+
+            if self.type == "NORMAL":
+                vel.x += cos(rotation) * (energy / 1000000.0)
+                vel.y += sin(rotation) * (energy / 1000000.0)
+            elif self.type == "SEEKING":
+                vel.x += cos(rotation) * (energy / 100000.0)
+                vel.y += sin(rotation) * (energy / 100000.0)
 
         return positions
