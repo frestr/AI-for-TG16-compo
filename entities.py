@@ -39,7 +39,7 @@ class Ship(Entity):
                 positions.append(vec(0, 0))
                 continue
 
-            angle = self.position.atan2()
+            angle = pos.atan2()
 
             if pos.length() < 0.1:
                 is_dead = True
@@ -55,6 +55,7 @@ class Ship(Entity):
             if vel.y < -0.05: vel.y = -0.05
 
             pos += vel
+            energy -= 1
 
             if pos.x > 1.0: pos.x = -1.0
             elif pos.x < -1.0: pos.x = 1.0
@@ -96,7 +97,7 @@ class Missile(Entity):
 
             # Force only depends on distance from the sun
             force = pos.length() / 1000
-            angle = self.position.atan2()
+            angle = pos.atan2()
             vel.x -= cos(angle) * force
             vel.y -= sin(angle) * force
 

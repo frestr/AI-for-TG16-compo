@@ -84,8 +84,8 @@ class Bot:
                      'rotation': 0, 'energy': 1000, 'owner': 'me'}
         missile = entities.Missile(temp_data)
 
-        target_movement = target.getMovement(5*int(1000/50))
-        missile_movement = missile.getMovement(5*int(1000/50))
+        target_movement = target.getMovement(10*int(1000/50))
+        missile_movement = missile.getMovement(10*int(1000/50))
         # Do something with the computed paths
         import matplotlib.pyplot as plt
         tx = []; ty = []; mx = []; my = []
@@ -96,8 +96,8 @@ class Bot:
             mx.append(pair.x)
             my.append(pair.y)
         plt.plot(tx,ty, 'k-', mx, my, 'k--')
-        plt.xlim([-1,1])
-        plt.ylim([1,-1])
+        plt.xlim([-1/1.5, 1/1.5])
+        plt.ylim([1, -1])
         plt.legend(["Target", "Missile"])
         plt.grid(True)
         plt.show()
