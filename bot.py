@@ -28,12 +28,7 @@ class Bot:
         self.missiles = data.missiles
 
     def make_decisions(self):
-        closest_opponent = self.get_closest_opponent()
-        if closest_opponent is not None:
-            if (self.point_towards(closest_opponent.position) and
-                self.ticks % 10 == 0):
-                self.simulate()
-                self.shoot()
+        self.simulate(self.ship.rotation)  # NB! Radians
 
     def accelerate(self):
         self.commands.append(self.actions['accel'])
@@ -73,31 +68,24 @@ class Bot:
             self.turn('l')
         return -5 < angle_diff < 5
 
-    def simulate(self):
+    def simulate(self, rotation):
         target = copy.deepcopy(self.get_closest_opponent())
+        if target is not None:
+            # Construct a missile
+            velocity_x = math.cos(rotation) * 0.05
+            velocity_y = math.sin(rotation) * 0.05
+            temp_data = {'x': self.ship.position.x, 'y': self.ship.position.y,
+                         'velocityX': velocity_x,
+                         'velocityY': velocity_y,
+                         'type': 'NORMAL',
+                         'rotation': rotation, 'energy': 1000, 'owner': 'me'}
+            missile = entities.Missile(temp_data)
 
-        # Construct a missile
-        temp_data = {'x': self.ship.position.x, 'y': self.ship.position.y,
-                     'velocityX': self.ship.velocity.x,
-                     'velocityY': self.ship.velocity.y,
-                     'type': 'NORMAL',
-                     'rotation': 0, 'energy': 1000, 'owner': 'me'}
-        missile = entities.Missile(temp_data)
+            target_movement = target.get_movement(50*int(1000/50))
+            missile_movement = missile.get_movement(50*int(1000/50))
+            for tick in range(len(target_movement)):
+                if (target_movement[tick] -
+                    missile_movement[tick]).length() <= 0.1:
+                    return True
 
-        target_movement = target.getMovement(10*int(1000/50))
-        missile_movement = missile.getMovement(10*int(1000/50))
-        # Do something with the computed paths
-        import matplotlib.pyplot as plt
-        tx = []; ty = []; mx = []; my = []
-        for pair in target_movement:
-            tx.append(pair.x)
-            ty.append(pair.y)
-        for pair in missile_movement:
-            mx.append(pair.x)
-            my.append(pair.y)
-        plt.plot(tx,ty, 'k-', mx, my, 'k--')
-        plt.xlim([-1/1.5, 1/1.5])
-        plt.ylim([1, -1])
-        plt.legend(["Target", "Missile"])
-        plt.grid(True)
-        plt.show()
+        return False

@@ -26,7 +26,7 @@ class Ship(Entity):
         super(Ship, self).update(data)
         self.id = data['id']
 
-    def getMovement(self, number_of_ticks):
+    def get_movement(self, number_of_ticks):
 
         positions = []
         # Initial conditions
@@ -74,7 +74,7 @@ class Missile(Entity):
         self.type = data['type']
         self.owner = data['owner']
 
-    def getMovement(self, number_of_ticks):
+    def get_movement(self, number_of_ticks):
 
         positions = []
         # Initial conditions
