@@ -61,15 +61,17 @@ class Bot:
             direction = 'right' if direction == 'r' else 'left'
             self.commands.append(self.actions[direction])
 
+    def get_distance(self, v1, v2):
+        w = h = 2 # Width and height of grid
+        return math.sqrt(min(abs(v1.x-v2.x), w - abs(v1.x-v2.x))**2 +
+                         min(abs(v1.y-v2.y), h - abs(v1.y-v2.y))**2)
+
+
     def get_closest_opponent(self):
         shortest_dist = 999999
         shortest_dist_opponent = None
         for opponent in self.opponents:
-            # distance = (self.ship.position - opponent.position).length()
-            u, v = self.ship.position, opponent.position
-            w = h = 2 # Width and height of grid
-            distance = math.sqrt(min(abs(u.x-v.x), w - abs(u.x-v.x))**2 +
-                                 min(abs(u.y-v.y), h - abs(u.y-v.y))**2)
+            distance = self.get_distance(self.ship.position, opponent.position)
             if distance < shortest_dist:
                 shortest_dist = distance
                 shortest_dist_opponent = opponent
@@ -105,9 +107,9 @@ class Bot:
 
             target_movement = target.get_movement(2*int(1000/50))
             missile_movement = missile.get_movement(2*int(1000/50))
-            for tick in range(len(target_movement)):
+            for tick in range(min(len(target_movement), len(missile_movement))):
                 if (target_movement[tick] - missile_movement[tick]).length() <= 0.1:
-                    distance = (target.position - self.ship.position).length()
+                    distance = self.get_distance(target.position, self.ship.position)
                     self.shoot_rate = self.calculate_shoot_rate(distance)
                     return True
 
