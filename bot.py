@@ -50,7 +50,7 @@ class Bot:
 
     # Rate is in "1 shot per x ticks"
     def calculate_shoot_rate(self, distance):
-        coeff = 5 # Lower coefficient gives higher shoot rate
+        coeff = 3 # Lower coefficient gives higher shoot rate
         rate = int(coeff * distance)
         return rate if rate != 0 else 1
 
@@ -65,7 +65,11 @@ class Bot:
         shortest_dist = 999999
         shortest_dist_opponent = None
         for opponent in self.opponents:
-            distance = (self.ship.position - opponent.position).length()
+            # distance = (self.ship.position - opponent.position).length()
+            u, v = self.ship.position, opponent.position
+            w = h = 2 # Width and height of grid
+            distance = math.sqrt(min(abs(u.x-v.x), w - abs(u.x-v.x))**2 +
+                                 min(abs(u.y-v.y), h - abs(u.y-v.y))**2)
             if distance < shortest_dist:
                 shortest_dist = distance
                 shortest_dist_opponent = opponent
@@ -87,7 +91,7 @@ class Bot:
         return -5 < angle_diff < 5
 
     def simulate(self, rotation):
-        target = copy.deepcopy(self.get_closest_opponent())
+        target = self.get_closest_opponent()
         if target is not None:
             # Construct a missile
             velocity_x = math.cos(rotation) * 0.05
