@@ -13,6 +13,7 @@ class Bot:
                         'right': 'RIGHT', 'missile': 'MISSILE',
                         'seeking': 'SEEKING', 'mine': 'MINE'}
         self.ticks = 0
+        self.shoot_rate = 0
 
     def get_command(self):
         try:
@@ -28,11 +29,13 @@ class Bot:
         self.missiles = data.missiles
 
     def make_decisions(self):
-        for angle in range(0, 350, 10):
+        for angle in range(0, 360, 10):
             radians = (self.ship.rotation + angle) * math.pi / 180
             if self.simulate(radians):  # NB! Radians
                 if angle == 0:
-                    self.shoot()
+                    if (self.shoot_rate != 0 and
+                            self.ticks % self.shoot_rate == 0):
+                        self.shoot()
                 elif angle < 180:
                     self.turn('r')
                 else:
@@ -44,6 +47,12 @@ class Bot:
 
     def shoot(self, seeking=False):
         self.commands.append(self.actions['seeking' if seeking else 'missile'])
+
+    # Rate is in "1 shot per x ticks"
+    def calculate_shoot_rate(self, distance):
+        coeff = 5 # Lower coefficient gives higher shoot rate
+        rate = int(coeff * distance)
+        return rate if rate != 0 else 1
 
     def turn(self, direction):
         if direction != 'r' and direction != 'l':
@@ -93,8 +102,10 @@ class Bot:
             target_movement = target.get_movement(2*int(1000/50))
             missile_movement = missile.get_movement(2*int(1000/50))
             for tick in range(len(target_movement)):
-                if (target_movement[tick] -
-                    missile_movement[tick]).length() <= 0.1:
+                if (target_movement[tick] - missile_movement[tick]).length() <= 0.1:
+                    distance = (target.position - self.ship.position).length()
+                    self.shoot_rate = self.calculate_shoot_rate(distance)
                     return True
 
+        self.shoot_rate = 0
         return False
