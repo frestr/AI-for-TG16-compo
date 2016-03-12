@@ -87,7 +87,7 @@ class Missile(Entity):
             if is_dead:
                 positions.append(vec(0, 0))
                 continue
-            elif pos.length() < 0.1:
+            elif pos.length() < 0.2:
                 is_dead = True
 
             if vel.length() > MISSILE_MAX_SPEED:

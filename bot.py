@@ -28,7 +28,16 @@ class Bot:
         self.missiles = data.missiles
 
     def make_decisions(self):
-        self.simulate(self.ship.rotation)  # NB! Radians
+        for angle in range(0, 350, 10):
+            radians = (self.ship.rotation + angle) * math.pi / 180
+            if self.simulate(radians):  # NB! Radians
+                if angle == 0:
+                    self.shoot()
+                elif angle < 180:
+                    self.turn('r')
+                else:
+                    self.turn('l')
+                break
 
     def accelerate(self):
         self.commands.append(self.actions['accel'])
@@ -81,8 +90,8 @@ class Bot:
                          'rotation': rotation, 'energy': 1000, 'owner': 'me'}
             missile = entities.Missile(temp_data)
 
-            target_movement = target.get_movement(50*int(1000/50))
-            missile_movement = missile.get_movement(50*int(1000/50))
+            target_movement = target.get_movement(2*int(1000/50))
+            missile_movement = missile.get_movement(2*int(1000/50))
             for tick in range(len(target_movement)):
                 if (target_movement[tick] -
                     missile_movement[tick]).length() <= 0.1:
