@@ -34,6 +34,13 @@ class vec:
     def length(self):
         return sqrt(self.x**2 + self.y**2)
 
+    def t_length(self):
+        """ Euclidean distance for torus  """
+        w = h = 2  # Width and height of grid
+        return sqrt(min(abs(self.x), w - abs(self.x))**2 +
+                    min(abs(self.y), h - abs(self.y))**2)
+
+
     def normalize(self):
         length = self.length()
         if length == 0:
@@ -44,5 +51,9 @@ class vec:
     def atan2(self):
         return atan2(self.y, self.x)
 
-    def dot(self, other):
-        return self.x*other.x + self.y*other.y
+    def perpendicular(self):
+        return vec(-self.y, -self.x)
+
+
+def dot(A, B):
+    return A.x*B.x + A.y*B.y
