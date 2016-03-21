@@ -35,7 +35,7 @@ class SocketHandler:
                 data_block = self.sock.recv(2**16).decode()
                 # A newline at the end means the whole data block was received
                 if '\n' in data_block:
-                    break
+                    return data_block[:data_block.find('\n')]
                 # If no data was received, check if the connection was closed
                 if len(data_block) == 0:
                     self.sock.settimeout(2)
@@ -44,8 +44,6 @@ class SocketHandler:
                     if bytes_received == 0:
                         raise BrokenPipeError
                     self.sock.settimeout(timeout)
-
-            return data_block
 
         except BrokenPipeError:
             print('Network socket closed (presumably by server). Quitting')
