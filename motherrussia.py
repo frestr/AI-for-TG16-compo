@@ -55,7 +55,6 @@ class MotherRussia:
                     # In most cases, this error will be 'Expecting value',
                     # because the block of raw data it received was empty
                     raise json_error
-            # self.data_handler.print_raw_json()
 
             self.bot.update_state(self.data_handler)
             self.bot.make_decisions()

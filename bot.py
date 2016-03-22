@@ -13,9 +13,6 @@ class Bot:
                         'seeking': 'SEEKING', 'mine': 'MINE'}
         self.ticks = 0
         self.shoot_rate = 0
-        self.curr_target = None
-        self.curr_target_ticks = 99999
-        self.curr_target_rotation = 0
 
     def get_command(self):
         try:
@@ -25,7 +22,12 @@ class Bot:
             return ''
 
     def update_state(self, data):
-        self.ticks += 1
+        if data.is_dead or data.is_end_of_round:
+            self.ticks = 0
+            self.shoot_rate = 0
+        else:
+            self.ticks += 1
+
         self.ship = data.myself
         self.opponents = data.opponents
         self.missiles = data.missiles
@@ -38,7 +40,7 @@ class Bot:
         self.calculate_target_orbits(ticks)
         self.calculate_own_missile_orbits('NORMAL', ticks)
 
-        lowest_ticks = self.curr_target_ticks - 1
+        lowest_ticks = 99999
         lowest_ticks_rotation = None
         lowest_ticks_target = None
         for target in self.opponents:
@@ -48,11 +50,6 @@ class Bot:
                 lowest_ticks_rotation = rotation
                 lowest_ticks_target = target
 
-        # The logic here is fishy
-        if abs(lowest_ticks - self.curr_target_ticks) < 5:
-            lowest_ticks_target = self.curr_target
-            lowest_ticks_rotation = self.curr_target_rotation
-        # the self.curr_* aren't updated
         if (lowest_ticks_rotation is not None and
                 lowest_ticks_target is not None and
                 self.point_towards(lowest_ticks_rotation)):
@@ -61,7 +58,10 @@ class Bot:
             if (self.shoot_rate != 0 and self.ticks % self.shoot_rate == 0):
                 self.shoot('missile')
 
+
         #  The bot may come down here doing nothing, since all ifs were false
+        #  Should only happen when no collision orbit was found
+        #  (point_towards will rotate the ship), and is there anything to do then?
 
     def accelerate(self):
         self.commands.append(self.actions['accel'])
@@ -73,7 +73,8 @@ class Bot:
     def calculate_shoot_rate(self, distance):
         coeff = 2  # Lower coefficient gives higher shoot rate
         rate = int(coeff * distance)
-        return rate if rate != 0 else 1
+        return 1
+        #return rate if rate != 0 else 1
 
     def turn(self, direction):
         if direction != 'r' and direction != 'l':

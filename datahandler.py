@@ -15,13 +15,11 @@ class DataHandler:
             return e
 
         message_type = self.data['messagetype']
-        if message_type == 'dead':
-            self.is_dead = True
 
-        elif message_type == 'endofround':
-            self.is_end_of_round = True
+        self.is_dead         = message_type == 'dead'
+        self.is_end_of_round = message_type == 'endofround'
 
-        elif message_type == 'stateupdate':
+        if message_type == 'stateupdate':
             self.update_state_data(self.data['gamestate'])
 
     def update_state_data(self, data):
