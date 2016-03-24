@@ -43,6 +43,7 @@ class Ship(Entity):
 
             if pos.length() < 0.1:
                 is_dead = True
+                positions.append(vec(0,0))
                 continue
 
             force = pos.length() / energy
@@ -89,6 +90,8 @@ class Missile(Entity):
                 continue
             elif pos.length() < 0.1:
                 is_dead = True
+                positions.append(vec(0, 0))
+                continue
 
             if vel.length() > MISSILE_MAX_SPEED:
                 velocityAngle = vel.atan2()
