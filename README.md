@@ -25,7 +25,6 @@ Alternatively:
 ```
 chmod +x start_bot.sh
 ./start_bot.sh
-
 ```
 
 If bash/sh is not available (i.e. on Windows):
