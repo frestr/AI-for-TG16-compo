@@ -53,7 +53,9 @@ class Bot:
             
             distance = self.get_distance(lowest_ticks_target.position, self.ship.position)
             self.shoot_rate = self.calculate_shoot_rate(distance)
-            if (self.shoot_rate != 0 and self.ticks % self.shoot_rate == 0):
+            if (self.shoot_rate != 0 and 
+                    self.ticks % self.shoot_rate == 0 and
+                    self.ship.energy - 10*lowest_ticks > 0):
                 self.shoot('missile')
 
     def accelerate(self):
