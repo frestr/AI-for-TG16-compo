@@ -12,7 +12,9 @@ class MotherRussia:
         self.connector = SocketHandler(timeout)
         self.debug = debug_mode
         self.bot = Bot()
-        self.ticks = 2*(1000//50)
+
+        self.DEFAULT_TICKS = 2*(1000//50)
+        self.ticks = self.DEFAULT_TICKS
 
     def __enter__(self):
         return self
@@ -57,15 +59,19 @@ class MotherRussia:
                     # In most cases, this error will be 'Expecting value',
                     # because the block of raw data it received was empty
                     raise json_error
+
+            if self.data_handler.is_dead or self.data_handler.is_end_of_round:
+                self.ticks = self.DEFAULT_TICKS
+
             start = time.perf_counter()
             self.bot.update_state(self.data_handler)
             self.bot.make_decisions(self.ticks)
-            elapsed_time = (time.perf_counter() - start)*1000
-            if elapsed_time > 50:
+            # elapsed_time = (time.perf_counter() - start)*1000
+            if elapsed_time > 45 and self.ticks > 0.5*(1000//50):
                 self.ticks -= 1
-            elif elapsed_time < 30:
+            elif elapsed_time < 30 and self.ticks < 4*(1000//50):
                 self.ticks += 1
-            # print(elapsed_time, self.ticks)
+            print(elapsed_time, self.ticks)
             while len(self.bot.commands) > 0:
                 command = self.bot.get_command()
                 self.connector.send_data(command)
