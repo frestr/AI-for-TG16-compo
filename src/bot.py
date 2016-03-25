@@ -32,8 +32,7 @@ class Bot:
         self.opponents = data.opponents
         self.missiles = data.missiles
 
-    def make_decisions(self):
-        ticks = 2*(1000//50)
+    def make_decisions(self, ticks):
         self.calculate_own_orbit(ticks)
         self.calculate_target_orbits(ticks)
         self.calculate_own_missile_orbits('NORMAL', ticks)
@@ -53,7 +52,7 @@ class Bot:
             
             distance = self.get_distance(lowest_ticks_target.position, self.ship.position)
             self.shoot_rate = self.calculate_shoot_rate(distance)
-            if (self.shoot_rate != 0 and 
+            if (self.shoot_rate != 0 and
                     self.ticks % self.shoot_rate == 0 and
                     self.ship.energy - (10*lowest_ticks)/self.shoot_rate > 0):
                 self.shoot('missile')

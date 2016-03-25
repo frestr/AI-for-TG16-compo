@@ -1,6 +1,7 @@
 from sockethandler import SocketHandler
 from datahandler import DataHandler
 from bot import Bot
+import time
 
 
 class MotherRussia:
@@ -11,6 +12,7 @@ class MotherRussia:
         self.connector = SocketHandler(timeout)
         self.debug = debug_mode
         self.bot = Bot()
+        self.ticks = 2*(1000//50)
 
     def __enter__(self):
         return self
@@ -55,10 +57,15 @@ class MotherRussia:
                     # In most cases, this error will be 'Expecting value',
                     # because the block of raw data it received was empty
                     raise json_error
-
+            start = time.perf_counter()
             self.bot.update_state(self.data_handler)
-            self.bot.make_decisions()
-
+            self.bot.make_decisions(self.ticks)
+            elapsed_time = (time.perf_counter() - start)*1000
+            if elapsed_time > 50:
+                self.ticks -= 1
+            elif elapsed_time < 30:
+                self.ticks += 1
+            # print(elapsed_time, self.ticks)
             while len(self.bot.commands) > 0:
                 command = self.bot.get_command()
                 self.connector.send_data(command)
