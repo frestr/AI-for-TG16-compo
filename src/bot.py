@@ -1,6 +1,7 @@
 from collections import deque
 import math
 import entities
+from vector import vec
 
 
 class Bot:
@@ -95,10 +96,9 @@ class Bot:
 
     # Returns True when has correct angle (in degrees)
     def point_towards(self, angle: 'degrees'):
-        angle_diff = angle
-        if angle_diff > 5:
+        if angle > 5:
             self.turn('r')
-        elif angle_diff < -5:
+        elif angle < -5:
             self.turn('l')
         return angle == 0
 
@@ -151,6 +151,8 @@ class Bot:
         if target is not None:
             for rotation, missile_orbit in self.own_missile_orbits.items():
                 for tick in range(len(missile_orbit)):
+                    if self.target_orbit[target][tick] == vec(0, 0) or missile_orbit[tick] == vec(0,0):
+                        continue
                     if (self.target_orbit[target][tick] - missile_orbit[tick]).t_length() <= 0.1:
                         ticks = tick + math.ceil(abs(rotation) / 10)
                         if ticks < lowest_ticks:
